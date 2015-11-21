@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
+import com.gemini.dal.DbHelper;
 import com.gemini.http.Server;
-import com.gemini.utils.CSVParser;
 
 @Configuration
 @PropertySource("classpath:chitchat.properties")
@@ -24,10 +24,10 @@ public class Main {
 		}
 	}
 	
-	@Bean(initMethod="parse")
-	public CSVParser csvParser(){
-		l.debug("Creating CSVParser bean");
-		return new CSVParser();
+	@Bean
+	public DbHelper dbHelper(){
+		l.debug("Database helper initialized");
+		return new DbHelper();
 	}
 	
 	@Bean(initMethod="initialize")

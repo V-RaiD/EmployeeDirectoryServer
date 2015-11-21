@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.gemini.utils.CSVParser;
+import com.gemini.dal.DbHelper;
 
 @Component
 public class Server {
@@ -24,7 +24,7 @@ public class Server {
 	private EventLoopGroup workerGroup;
 	private ChannelFuture f;
 
-	public @Autowired CSVParser csvParser;
+	public @Autowired DbHelper dbHelper;
 	
 	public void initialize() throws Exception{
 		bossGroup = new NioEventLoopGroup();
@@ -39,7 +39,7 @@ public class Server {
 
             // Bind and start to accept incoming connections.
             l.debug("Starting Server @ localhost:{}", port);
-            l.debug("csv parser:{}", CSVParser.getData());
+            l.debug("Db connection:{}", dbHelper);
             f = b.bind(Integer.parseInt(port)).sync();
 
             f.channel().closeFuture().sync();
@@ -50,8 +50,8 @@ public class Server {
         }
 	}
 	
-	public CSVParser getCsvParser(){
-		return csvParser;
+	public DbHelper getDbHelper(){
+		return dbHelper;
 	}
 	
 	public void shutDown() {
