@@ -88,10 +88,8 @@ public class RequestHandler extends SimpleChannelInboundHandler<FullHttpRequest>
 			l.debug("Building HTTP response: ", reqBody);
 			FullHttpResponse response = new DefaultFullHttpResponse(
 					HttpVersion.HTTP_1_1, HttpResponseStatus.OK,
-					Unpooled.EMPTY_BUFFER);
+					Unpooled.copiedBuffer(jsonString.getBytes()));
 			response.headers().set("content-type", "application/json");
-			response.headers().set("content-length",
-					response.content().readableBytes());
 
 			ctx.write(response);
 
