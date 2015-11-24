@@ -18,9 +18,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,7 +33,7 @@ public class RequestHandler extends SimpleChannelInboundHandler<FullHttpRequest>
 
 	private static Logger l = LoggerFactory.getLogger(RequestHandler.class);
 	private static ObjectMapper om = new ObjectMapper();
-	private @Autowired DbHelper dbHelper;
+
 
 	@Override
 	public void channelReadComplete(ChannelHandlerContext ctx) {
@@ -86,14 +89,16 @@ public class RequestHandler extends SimpleChannelInboundHandler<FullHttpRequest>
 			l.debug("Building HTTP response: ", jsonString);
 			Map<String,Object> reqBody = om.readValue(jsonString, new TypeReference<HashMap<String, Object>>(){});
 			l.debug("Building HTTP response: ", reqBody);
+			JSONArray arr = DbHelper.getInstance().getEmployeesData((Integer)reqBody.get("eid"), (Integer)reqBody.get("sid"), (Integer)reqBody.get("lim"));
 			FullHttpResponse response = new DefaultFullHttpResponse(
 					HttpVersion.HTTP_1_1, HttpResponseStatus.OK,
-					Unpooled.copiedBuffer(jsonString.getBytes()));
+					Unpooled.copiedBuffer(arr.toString().getBytes()));
 			response.headers().set("content-type", "application/json");
 
 			ctx.write(response);
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			l.error("Exception occured: {}", new Object[] { e.getStackTrace() });
 		} finally {
 			l.debug("Releasing request buffer object");

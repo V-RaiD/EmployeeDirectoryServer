@@ -24,7 +24,7 @@ public class Server {
 	private EventLoopGroup workerGroup;
 	private ChannelFuture f;
 
-	public @Autowired DbHelper dbHelper;
+
 	
 	public void initialize() throws Exception{
 		bossGroup = new NioEventLoopGroup();
@@ -39,7 +39,7 @@ public class Server {
 
             // Bind and start to accept incoming connections.
             l.debug("Starting Server @ localhost:{}", port);
-            l.debug("Db connection:{}", dbHelper);
+            l.debug("Db connection:{}", DbHelper.getInstance());
             f = b.bind(Integer.parseInt(port)).sync();
 
             f.channel().closeFuture().sync();
@@ -51,7 +51,7 @@ public class Server {
 	}
 	
 	public DbHelper getDbHelper(){
-		return dbHelper;
+		return DbHelper.getInstance();
 	}
 	
 	public void shutDown() {

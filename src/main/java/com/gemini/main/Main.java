@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
-import com.gemini.dal.DbHelper;
 import com.gemini.http.Server;
 
 @Configuration
@@ -22,12 +21,6 @@ public class Main {
 		} catch (Exception e) {
 			l.error("Error occured: {}", e.getMessage());
 		}
-	}
-	
-	@Bean
-	public DbHelper dbHelper(){
-		l.debug("Database helper initialized");
-		return new DbHelper();
 	}
 	
 	@Bean(initMethod="initialize")
